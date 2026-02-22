@@ -1,16 +1,1 @@
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-
-app = FastAPI()
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-@app.get("/health")
-def health_check():
-    return {"status": "healthy"}
+from fastapi import FastAPI, HTTPException\nfrom fastapi.middleware.cors import CORSMiddleware\nfrom pydantic import BaseModel\n\napp = FastAPI()\n\napp.add_middleware(\n    CORSMiddleware,\n    allow_origins=["*"],  # allow all origins\n    allow_credentials=True,\n    allow_methods=["*"],  # allow all methods\n    allow_headers=["*"],  # allow all headers\n)\n\nclass AnalyzeRequest(BaseModel):\n    url: str  # URL of the website\n    options: dict  # additional options for the sitemap processing\n\n@app.get("/health")\ndef health_check():\n    return {"status": "healthy"}\n\n@app.post("/analyze")\ndef analyze(request: AnalyzeRequest):\n    # Implement logic to fetch and process sitemap based on URL and options\n    # Placeholder response for now\n    return {"message": "Sitemap processed", "url": request.url, "options": request.options}
